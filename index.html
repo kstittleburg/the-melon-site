@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spinning Cantaloupe</title>
+<style>
+:root {
+--bg: #0f172a; /* deep slate */
+--seed: #7c4a03; /* seed color */
+--flesh1: #ffd9a3; /* melon flesh (light) */
+--flesh2: #f8b26a; /* melon flesh (mid) */
+--flesh3: #f59e46; /* melon flesh (deep) */
+--rind1: #a7da82; /* rind highlight */
+--rind2: #68a851; /* rind shadow */
+}
+
+
+html, body {
+height: 100%;
+}
+
+
+body {
+margin: 0;
+display: grid;
+place-items: center;
+background: var(--bg);
+color: #e2e8f0;
+font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+
+.scene {
+display: grid;
+place-items: center;
+gap: 1rem;
+}
+
+
+.melon {
+width: 220px;
+height: 220px;
+border-radius: 50%;
+/* Use layered gradients to suggest a sliced cantaloupe */
+background:
+/* seeds cluster */
+radial-gradient(10px 6px at 55% 47%, var(--seed) 45%, #0000 46%),
+radial-gradient(10px 6px at 50% 53%, var(--seed) 45%, #0000 46%),
+radial-gradient(10px 6px at 45% 47%, var(--seed) 45%, #0000 46%),
+radial-gradient(10px 6px at 50% 43%, var(--seed) 45%, #0000 46%),
+/* flesh */
+radial-gradient(circle at 50% 50%, var(--flesh1) 0% 30%, var(--flesh2) 31% 55%, var(--flesh3) 56% 72%, var(--flesh2) 73% 83%, var(--flesh1) 84% 87%, #0000 88%),
+/* rind */
+radial-gradient(circle at 50% 50%, #0000 82%, var(--rind1) 83% 88%, var(--rind2) 89% 100%);
+box-shadow: 0 20px 60px rgba(0,0,0,.35), inset 0 2px 8px rgba(255,255,255,.25);
+animation: spin 6s linear infinite;
+will-change: transform;
+}
+
+
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+
+.caption { opacity: .8; font-size: .95rem; }
+</style>
+</head>
+<body>
+<main class="scene" aria-label="A cantaloupe slice that spins in circles">
+<div class="melon" role="img" aria-label="Spinning cantaloupe"></div>
+<div class="caption">spinning cantaloupe 🍈</div>
+</main>
+</body>
+</html>
