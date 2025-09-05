@@ -6,13 +6,13 @@
 <title>Spinning Cantaloupe</title>
 <style>
 :root {
---bg: #0f172a; /* deep slate */
---seed: #7c4a03; /* seed color */
---flesh1: #ffd9a3; /* melon flesh (light) */
---flesh2: #f8b26a; /* melon flesh (mid) */
---flesh3: #f59e46; /* melon flesh (deep) */
---rind1: #a7da82; /* rind highlight */
---rind2: #68a851; /* rind shadow */
+--bg: #0f172a;
+--seed: #7c4a03;
+--flesh1: #ffd9a3;
+--flesh2: #f8b26a;
+--flesh3: #f59e46;
+--rind1: #a7da82;
+--rind2: #68a851;
 }
 
 
@@ -39,23 +39,27 @@ gap: 1rem;
 
 
 .melon {
+position: relative;
 width: 220px;
 height: 220px;
 border-radius: 50%;
-/* Use layered gradients to suggest a sliced cantaloupe */
 background:
-/* seeds cluster */
-radial-gradient(10px 6px at 55% 47%, var(--seed) 45%, #0000 46%),
-radial-gradient(10px 6px at 50% 53%, var(--seed) 45%, #0000 46%),
-radial-gradient(10px 6px at 45% 47%, var(--seed) 45%, #0000 46%),
-radial-gradient(10px 6px at 50% 43%, var(--seed) 45%, #0000 46%),
-/* flesh */
 radial-gradient(circle at 50% 50%, var(--flesh1) 0% 30%, var(--flesh2) 31% 55%, var(--flesh3) 56% 72%, var(--flesh2) 73% 83%, var(--flesh1) 84% 87%, #0000 88%),
-/* rind */
 radial-gradient(circle at 50% 50%, #0000 82%, var(--rind1) 83% 88%, var(--rind2) 89% 100%);
 box-shadow: 0 20px 60px rgba(0,0,0,.35), inset 0 2px 8px rgba(255,255,255,.25);
 animation: spin 6s linear infinite;
 will-change: transform;
+}
+
+
+.seed {
+position: absolute;
+width: 16px;
+height: 10px;
+background: var(--seed);
+border-radius: 50%;
+top: 50%;
+left: 50%;
 }
 
 
@@ -65,12 +69,64 @@ to { transform: rotate(360deg); }
 
 
 .caption { opacity: .8; font-size: .95rem; }
+
+
+.controls {
+display: flex;
+gap: 0.5rem;
+align-items: center;
+}
 </style>
 </head>
 <body>
 <main class="scene" aria-label="A cantaloupe slice that spins in circles">
-<div class="melon" role="img" aria-label="Spinning cantaloupe"></div>
+<div class="melon" id="melon" role="img" aria-label="Spinning cantaloupe"></div>
 <div class="caption">spinning cantaloupe 🍈</div>
+<div class="controls">
+<label for="seedCount">Seeds:</label>
+<input id="seedCount" type="number" min="0" max="20" value="4" />
+</div>
 </main>
+
+
+<script>
+const melon = document.getElementById("melon");
+const seedInput = document.getElementById("seedCount");
+
+
+function renderSeeds(count) {
+// Clear old seeds
+melon.querySelectorAll(".seed").forEach(s => s.remove());
+
+
+const melonRadius = melon.offsetWidth / 2;
+const seedRadius = melonRadius * 0.3; // 30% of melon radius for orbit
+
+
+// Place seeds evenly in a circle closer to center
+for (let i = 0; i < count; i++) {
+const seed = document.createElement("div");
+seed.className = "seed";
+const angle = (i / count) * 360;
+seed.style.transform = `rotate(${angle}deg) translateX(${seedRadius}px)`;
+melon.appendChild(seed);
+}
+}
+
+
+// Initial render
+renderSeeds(parseInt(seedInput.value, 10));
+
+
+seedInput.addEventListener("input", () => {
+renderSeeds(parseInt(seedInput.value, 10));
+});
+
+
+// Re-render seeds on window resize so radius scales with melon size
+window.addEventListener("resize", () => {
+renderSeeds(parseInt(seedInput.value, 10));
+});
+</script>
 </body>
 </html>
